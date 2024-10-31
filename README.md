@@ -1,7 +1,5 @@
 # dotnet-nuget-gc
 
-[![Build Status](https://terrajobst.visualstudio.com/dotnet-nuget-gc/_apis/build/status/terrajobst.dotnet-nuget-gc?branchName=master)](https://terrajobst.visualstudio.com/dotnet-nuget-gc/_build/latest?definitionId=15)
-
 This `dotnet` extension is designed to clean-up the NuGet cache. It's a
 (hopefully) temporary workaround for the [missing cache-expiration
 policy][nuget-issue]. Code written by [@dotmorten] as outlined in [his
@@ -13,7 +11,7 @@ comment][code-origin].
 
 ## Installation
 
-    $ dotnet tool install dotnet-nuget-gc -g
+    $ BuildAndInstall-win.ps1
 
 ## Usage
 

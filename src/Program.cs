@@ -88,7 +88,7 @@ namespace NugetCacheCleaner
             var totalDeleted = 0L;
 
             var deleted = new HashSet<DirectoryInfo>();
-            
+
             void CleanPackageDirectory(DirectoryInfo dir)
             {
                 DirectoryInfo versionDir;
@@ -101,23 +101,24 @@ namespace NugetCacheCleaner
                         var size = versionDirFiles.Sum(f => f.Length);
                         DeleteDir(versionDir, force, withLockCheck);
                         deleted.Add(versionDir);
-                        totalDeleted += size;
+                        return size;
                     }
                     catch (FileNotFoundException)
                     {
-                        // ok
+                        return 0;
                     }
                     catch (UnauthorizedAccessException)
                     {
                         Console.WriteLine($"Warning: Not authorized to delete {versionDir.FullName}.");
+                        return 0;
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Warning: Deleting {versionDir.FullName} encountered {ex.GetType().Name}: {ex.Message}");
+                        return 0;
                     }
-                    return totalDeleted;
                 }
-                
+
                 var versions = new Dictionary<NuGetVersion, DirectoryInfo>();
                 deleted.Clear();
                 foreach (var subDir in dir.GetDirectories())
@@ -138,7 +139,7 @@ namespace NugetCacheCleaner
                     var newestRelease = releases.Any() ? releases.Max() : null;
                     var prereleases = versions.Keys.Where(v => v > newestRelease && v.IsPrerelease).ToArray();
                     var newestPrerelease = prereleases.Any() ? prereleases.Max() : null;
-                    
+
                     foreach (var versionedDir in versions)
                     {
                         if (versionedDir.Key == newestRelease) continue;
@@ -148,7 +149,7 @@ namespace NugetCacheCleaner
                         versionDirFiles = versionDir.GetFiles("*.*", SearchOption.AllDirectories);
                         totalDeleted += DeleteVersion(false);
                     }
-                    
+
                     foreach (var deletedDir in deleted)
                     {
                         var parsedVersion = versions.First(k => k.Value == deletedDir).Key;
@@ -167,12 +168,12 @@ namespace NugetCacheCleaner
                     }
 
                     var lastAccessed = DateTime.UtcNow - versionDirFiles.Max(GetLastAccessed);
-                    
+
                     if (lastAccessed <= minDays)
                         continue;
-                    
+
                     Console.WriteLine($"{versionDir.FullName} last accessed {Math.Floor(lastAccessed.TotalDays)} days ago");
-                    
+
                     totalDeleted = DeleteVersion(true);
                 }
                 if (dir.GetDirectories().Length == 0)
@@ -214,14 +215,10 @@ namespace NugetCacheCleaner
         {
             if (!force)
             {
-#if DEBUG
                 Console.WriteLine($"Would remove {dir.FullName}.");
-#endif
                 return;
             }
-#if DEBUG
             Console.WriteLine($"Removing {dir.FullName}.");
-#endif
 
             if (withLockCheck) // This may only be good enough for Windows
             {
