@@ -2,10 +2,18 @@
 
 This `dotnet` extension is designed to clean-up the NuGet cache. It's a
 (hopefully) temporary workaround for the [missing cache-expiration
-policy][nuget-issue]. Code written by [@dotmorten] as outlined in [his
+policy][nuget-issue]. 
+
+Code written by [@dotmorten] as outlined in [his
 comment][code-origin].
 
+Original github project by [@terrajobst].
+
+Prune code by [@StirlingLabs].
+
 [@dotmorten]: https://github.com/dotMorten
+[@terrajobst]: https://github.com/terrajobst
+[@StirlingLabs]: https://github.com/StirlingLabs
 [nuget-issue]: https://github.com/NuGet/Home/issues/4980
 [code-origin]: https://github.com/NuGet/Home/issues/4980#issuecomment-432512640
 
