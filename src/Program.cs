@@ -174,7 +174,7 @@ namespace NugetCacheCleaner
 
                     Console.WriteLine($"{versionDir.FullName} last accessed {Math.Floor(lastAccessed.TotalDays)} days ago");
 
-                    totalDeleted = DeleteVersion(true);
+                    totalDeleted += DeleteVersion(true);
                 }
                 if (dir.GetDirectories().Length == 0)
                     DeleteDir(dir, force, withLockCheck: false);
